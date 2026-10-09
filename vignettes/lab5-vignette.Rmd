@@ -24,9 +24,7 @@ API documentation is available at: https://www.nobelprize.org/about/developer-zo
 
 The package can be installed with the following command.
 
-> pak::pak("gigi133017/Lab4")
-
-You can always check that it was successfully installed using:
+> pak::pak("ValentinRapetti/Lab5")
 
 ## Functions
 
