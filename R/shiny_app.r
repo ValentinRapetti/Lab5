@@ -12,20 +12,36 @@ library(shiny)
 df <- get_laureates(category = "pea")
 df_shiny <- parse_to_shiny(df)
 
+continent_colors <- c(
+  "Africa" = "black",
+  "Asia" = "yellow",
+  "Europe" = "blue",
+  "North America" = "red",
+  "South America" = "orange",
+  "Oceania" = "green",
+  "Organizations" = "gray"
+)
+continent_colors <- colorspace::desaturate(continent_colors, amount = 0.2)
 
 ui <- fluidPage(
-  
-  numericInput(inputId = "Year", 
-               label = "Award Year", 
-               value = 1950, min = 1900, max = 2026, step = 1),
-  plotOutput(outputId = "probs")
-  
+
+    sliderInput(
+        inputId = "Year",
+        label = "Award Year Range",
+        min = 1900,
+        max = 2026,
+        value = c(1950, 2020),
+        step = 1,
+        sep = ""
+    ),
+
+    plotOutput(outputId = "probs")
 )
 
 server <- function(input, output) {
 
   output$probs <- renderPlot({
-    df_filter <- filter_laureates(df_shiny, awardYear = input$Year)
+    df_filter <- filter_laureates(df_shiny, awardYear=input$Year[1], awardYearTo=input$Year[2])
     award_continents <- table(df_filter["birth.place.continent.en"], useNA="ifany")
     names(award_continents)[is.na(names(award_continents))] <- "Organizations"
 
@@ -35,6 +51,7 @@ server <- function(input, output) {
 
     barplot(height = base_continents,
             names = names(base_continents),
+            col = continent_colors[names(base_continents)],
             ylab = "# of laureates",
             main = "Distribution of laureates per continent")
   })

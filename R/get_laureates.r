@@ -1,17 +1,38 @@
 #' Get list of laureates using API
 #'
-#' This funcction downloads the 
+#' This funcction downloads the database of Nobel Laureates from nobelprize.org.
+#' Several filters can be applied on the query to reduce the database size.
 #'
-#' @param formula formula
-#' @param data data.frame
-#' @return linreg class object
+#' @param gender "male", "female"
+#' @param year integer
+#' @param yearTo integer
+#' @param name string
+#' @param birthDate date format (YYYY, -MM-, -DD or YYYY-MM-DD)
+#' @param birthDateTo date format (YYYY, -MM-, -DD or YYYY-MM-DD)
+#' @param birthCountry string
+#' @param category string ['che', 'eco', 'lit', 'pea', 'phy', 'med']
+#' @param limit integer
+#' @return dframe data frame
+#' @references https://www.nobelprize.org/about/developer-zone-2/
 #' @export
 get_laureates <- function(gender="", year = "",  yearTo="", 
                          name="", birthDate="", birthDateTo="",
                          birthCountry="", category="", limit=2000){
 
     # Check input for each variable 
+    presentYear <- as.integer(format(Sys.Date(),"%Y"))
+    cat_list <- c('che', 'eco', 'lit', 'pea', 'phy', 'med')
 
+    stopifnot("Gender must be \"male\" or \"female\""=(gender=="female" | gender=="male" | gender==""),
+        "Year must be an integer"=((is.numeric(year) & length(year)==1) | year==""), 
+        "YearTo must be an integer"=((is.numeric(yearTo) & length(yearTo)==1) | yearTo==""),
+        "YearTo must be smaller than present year"=yearTo<=presentYear,
+        "Year must be greater than 1900"=(year>1900 | year==""),
+        "Year must be smaller than present year"=year<=presentYear,
+        "Name must be a string"=is.character(name),
+        "BirthCountry must be a string"=is.character(birthCountry),
+        "Category must be ['che', 'eco', 'lit', 'pea', 'phy', 'med']"=any(category==cat_list)
+    )
     # --------
     #  Query
     # --------
