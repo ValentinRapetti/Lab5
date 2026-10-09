@@ -20,4 +20,5 @@ Imports:
     testthat,
     httr2,
     jsonlite,
-    shiny
+    shiny,
+    colorspace
