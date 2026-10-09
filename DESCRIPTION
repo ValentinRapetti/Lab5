@@ -17,8 +17,11 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 Imports:
-    testthat,
-    httr2,
-    jsonlite,
     shiny,
-    colorspace
+    leaflet,
+    dplyr,
+    countrycode,
+    rnaturalearth,
+    colorspace,
+    httr2,
+    jsonlite
