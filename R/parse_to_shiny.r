@@ -23,9 +23,12 @@ parse_to_shiny <- function(dframe){
     dframe["prizeAmount"] <- prizeAmount
 
     # Join different names' fields (to get the organizations' names)
+    name_cols <- c("knownName.en", "acronym", "nativeName")
+    name_cols <- intersect(name_cols, names(dframe))
+
     dframe$name <- Reduce(
             function(x, y) ifelse(is.na(x), y, x),
-            dframe[c("knownName.en", "acronym", "nativeName")])
+            dframe[name_cols])
 
     dframe <- dframe[, c("id", "name", "gender", "birth.year", "birth.place.countryNow.en", "birth.place.continent.en",
                          "age", "awardYear", "category", "prizeAmount")]

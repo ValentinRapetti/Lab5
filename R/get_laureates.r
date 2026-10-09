@@ -18,8 +18,16 @@
 get_laureates <- function(gender="", year = "",  yearTo="", 
                          name="", birthDate="", birthDateTo="",
                          birthCountry="", category="", limit=2000){
-
+                        
     # Check input for each variable 
+    category <- switch(category,
+        "Chemistry" = "che",
+        "Economic Sciences" = "eco",
+        "Literature" = "lit",
+        "Peace" = "pea",
+        "Physics" = "phy",
+        "Physiology or Medicine" = "med",
+        category)
     presentYear <- as.integer(format(Sys.Date(),"%Y"))
     cat_list <- c('che', 'eco', 'lit', 'pea', 'phy', 'med')
 
@@ -61,6 +69,27 @@ get_laureates <- function(gender="", year = "",  yearTo="",
     # ---------
     #  \Query
     # ---------
+
+    # We expand the list for those who won more than one Nobel Prize
+    n_prizes <- sapply(dframe$nobelPrizes, function(x) length(x$awardYear))
+    prizes <- dframe$nobelPrizes
+
+    dframe <- dframe[rep(seq_len(nrow(dframe)), times = n_prizes), ]
+
+    # Fix the contents of the duplication
+    dframe$nobelPrizes <- unlist(
+    lapply(prizes, function(x) {
+        lapply(seq_len(nrow(x)), function(i) x[i, , drop = FALSE])
+    }),
+    recursive = FALSE
+    )
+
+    ## MISSING: CHECK IF YEAR AND CATEGORY MATCH
+    # dframe <- head(dframe[
+    #             sapply(dframe$nobelPrizes, function(x)
+    #                 (x$awardYear <= yearTo | yearTo == "") &
+    #                 (x$awardYear >= year | year == "") &
+    #                 (x$category.en == category | category == "")), ], limit)
 
     return(dframe)
 }

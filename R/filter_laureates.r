@@ -4,6 +4,7 @@
 #' The input data frame must be the result of parse_to_shiny.
 #'
 #' @param dframe data frame
+#' @param id integer
 #' @param gender "male", "female", "org"
 #' @param awardYear integer
 #' @param awardYearTo integer
@@ -17,16 +18,25 @@
 #' @param limit integer
 #' @return dframe data frame
 #' @export
-filter_laureates <- function(dframe, gender="", awardYear = "",  awardYearTo="", 
-                         name="", birthYear="", birthYearTo="",
+filter_laureates <- function(dframe, id="", gender="", awardYear = "", 
+                         awardYearTo="", name="", birthYear="", birthYearTo="",
                          country="", continent="", category="", age="", limit=2000){
 
     # Check input for each variable
+    category <- switch(category,
+        "Chemistry" = "che",
+        "Economic Sciences" = "eco",
+        "Literature" = "lit",
+        "Peace" = "pea",
+        "Physics" = "phy",
+        "Physiology or Medicine" = "med",
+        category)
     presentYear <- as.integer(format(Sys.Date(),"%Y"))
     cat_list <- c('che', 'eco', 'lit', 'pea', 'phy', 'med')
     cont_list <- c('Africa', 'Asia', 'Europe', 'North America', 'Oceania', 'South America')
 
-    stopifnot("Gender must be \"male\", \"female\", or \"org\""=(gender=="female" | gender=="male" | gender=="org" | gender==""),
+    stopifnot("Id must be a positive integer"=((is.numeric(id) & length(id)==1 & id>0) | id==""),
+        "Gender must be \"male\", \"female\", or \"org\""=(gender=="female" | gender=="male" | gender=="org" | gender==""),
         "AwardYear must be an integer"=((is.numeric(awardYear) & length(awardYear)==1) | awardYear==""), 
         "AwardYearTo must be an integer"=((is.numeric(awardYearTo) & length(awardYearTo)==1) | awardYearTo==""),
         "AwardYear must be greater than 1900"=(awardYear>1900 | awardYear==""),
@@ -48,7 +58,17 @@ filter_laureates <- function(dframe, gender="", awardYear = "",  awardYearTo="",
     if(awardYearTo=="") awardYearTo <- awardYear
     if(birthYearTo=="") birthYearTo <- birthYear
 
-    dframe <- head(dframe[(dframe$gender == gender | gender == "") &
+    category <- switch(category,
+        che = "Chemistry",
+        eco = "Economic Sciences",
+        lit = "Literature",
+        pea = "Peace",
+        phy = "Physics",
+        med = "Physiology or Medicine",
+        category)
+
+    dframe <- head(dframe[(dframe$id == id | id == "") &
+                          (dframe$gender == gender | gender == "") &
                           (dframe$awardYear <= awardYearTo | awardYearTo == "") &
                           (dframe$awardYear >= awardYear | awardYear == "") &
                           (dframe$name == name | name == "") &

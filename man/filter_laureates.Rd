@@ -6,6 +6,7 @@
 \usage{
 filter_laureates(
   dframe,
+  id = "",
   gender = "",
   awardYear = "",
   awardYearTo = "",
@@ -21,6 +22,8 @@ filter_laureates(
 }
 \arguments{
 \item{dframe}{data frame}
+
+\item{id}{integer}
 
 \item{gender}{"male", "female", "org"}
 

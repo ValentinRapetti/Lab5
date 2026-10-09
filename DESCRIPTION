@@ -24,4 +24,5 @@ Imports:
     rnaturalearth,
     colorspace,
     httr2,
-    jsonlite
+    jsonlite,
+    testthat
