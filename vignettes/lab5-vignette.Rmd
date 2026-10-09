@@ -13,7 +13,45 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
+# Introduction
+This package retrieves data from the Nobel Prize API provided by the Nobel Prize organization and displays the results through an interactive Shiny application.
 
+The application allows users to explore Nobel Prize laureates by filtering the data according to several characteristics, including award year, category, gender, country of birth, and age. It also provides visualizations.
+
+API documentation is available at: https://www.nobelprize.org/about/developer-zone-2/
+
+## Installation
+
+The package can be installed with the following command.
+
+> pak::pak("gigi133017/Lab4")
+
+You can always check that it was successfully installed using:
+
+## Functions
+
+get_laureates(): Downoads as a dataframe the data about about the nobel prize winners, whe can select what nobel prize winners we want based on gender, period of the prize, name, time interval of birth, country of birth, prize category, age, limit 
+
+filter_laureates(): Filters a data frame of laureates according to a selected award year range. This function is primarily used internally by the Shiny application.
+
+get_laureates():
+
+parse_to_shiny(): Processes and reformats the downloaded data to make it compatible with the Shiny application. It adds the derived variable age
+
+ui: Contains the user interface definition of the Shiny application
+
+server: Contains the server-side logic of the Shiny application.
+
+## Shiny Application
+
+The application includes:
+A slider allowing users to select the range of award years to analyze.
+An interactive world map showing the geographic distribution of Nobel Prize laureates.
+A bar chart displaying the number of laureates by continent.
+A pie chart showing the distribution of laureates by gender.
+A scatter plot of the mean age of laureates by award year.
+
+## Tests
 ```{r setup}
 library(Lab5)
 ```
