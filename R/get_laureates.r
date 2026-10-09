@@ -1,9 +1,9 @@
-#' Get list of laureates using API
+#' Get list of laureates using API calls
 #'
-#' This funcction downloads the database of Nobel Laureates from nobelprize.org.
+#' This function downloads the database of Nobel Laureates from nobelprize.org.
 #' Several filters can be applied on the query to reduce the database size.
 #'
-#' @param gender "male", "female"
+#' @param gender "male", "female", "other"
 #' @param year integer
 #' @param yearTo integer
 #' @param name string
@@ -23,16 +23,21 @@ get_laureates <- function(gender="", year = "",  yearTo="",
     presentYear <- as.integer(format(Sys.Date(),"%Y"))
     cat_list <- c('che', 'eco', 'lit', 'pea', 'phy', 'med')
 
-    stopifnot("Gender must be \"male\" or \"female\""=(gender=="female" | gender=="male" | gender==""),
+    stopifnot("Gender must be \"male\", \"female\", or \"other\""=(gender=="female" | gender=="male" | gender=="other" | gender==""),
         "Year must be an integer"=((is.numeric(year) & length(year)==1) | year==""), 
         "YearTo must be an integer"=((is.numeric(yearTo) & length(yearTo)==1) | yearTo==""),
-        "YearTo must be smaller than present year"=yearTo<=presentYear,
         "Year must be greater than 1900"=(year>1900 | year==""),
-        "Year must be smaller than present year"=year<=presentYear,
+        "Year must be smaller than present year"=(year<=presentYear | year==""),
+        "YearTo must be smaller than present year"=(yearTo<=presentYear | yearTo==""),
+        "YearTo must be greater or equal than Year"=(yearTo>=year | yearTo==""),
         "Name must be a string"=is.character(name),
+        "BirthDate is not a character"=is.character(birthDate), #Need to check for date format
+        "BirthDateTo is not a character"=is.character(birthDateTo),
         "BirthCountry must be a string"=is.character(birthCountry),
-        "Category must be ['che', 'eco', 'lit', 'pea', 'phy', 'med']"=any(category==cat_list)
+        "Category must be ['che', 'eco', 'lit', 'pea', 'phy', 'med']"=(category %in% cat_list | category==""),
+        "Limit must be an integer greater than 0"=(is.numeric(limit) & length(limit)==1 & limit>0)
     )
+
     # --------
     #  Query
     # --------

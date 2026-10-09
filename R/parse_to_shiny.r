@@ -1,3 +1,12 @@
+#' Modify laureate database for shiny app
+#'
+#' This function selects some columns from the laureates' database
+#' and adds others that are needed in the shiny app.
+#' The columns added are age, awardYear, category and prizeAmount.
+#'
+#' @param dframe data frame
+#' @return dframe data frame
+#' @export
 parse_to_shiny <- function(dframe){
 
     # Add four columns: Age, AwardYear, Category, and PrizeAmount
@@ -20,6 +29,9 @@ parse_to_shiny <- function(dframe){
 
     dframe <- dframe[, c("id", "name", "gender", "birth.year", "birth.place.countryNow.en", "birth.place.continent.en",
                          "age", "awardYear", "category", "prizeAmount")]
+
+    names(dframe)[names(dframe)=="birth.place.countryNow.en"] <- "country"
+    names(dframe)[names(dframe)=="birth.place.continent.en"] <- "continent"
     
     dframe["gender"][is.na(dframe["gender"])] <- "org"
 
